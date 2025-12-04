@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> CFG-Bench </title>
+
+    <!-- TODO: ./static/images/logo.png -->
+    <!-- <link rel="icon" href="./static/images/logo.png"> -->
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="stylesheet" href="./static/css/leaderboard.css">
+    <link rel="stylesheet" href="./static/css/video-player.css">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/explorer-index.js"></script>
+    <script src="./static/js/question_card.js"></script>
+
+    <style>
+        .js-sort-table th {
+            cursor: pointer;
+            position: relative;
+        }
+        .js-sort-table th:after {
+            content: "";
+            display: inline-block;
+            margin-left: 5px;
+            visibility: hidden;
+            width: 0;
+            height: 0;
+            vertical-align: middle;
+        }
+        .js-sort-table th.js-sort-asc:after {
+            visibility: visible;
+            content: "↓";
+            margin-left: 5px;
+            color: #3273dc;
+            font-size: 16px;
+        }
+        .js-sort-table th.js-sort-desc:after {
+            visibility: visible;
+            content: "↑";
+            margin-left: 5px;
+            color: #3273dc;
+            font-size: 16px;
+        }
+        .no-sort {
+            cursor: default !important;
+            pointer-events: none;
+        }
+        .no-sort:after {
+            display: none !important;
+        }
+        /* Maintain centering of text in table headers */
+        .js-sort-table th {
+            text-align: center;
+            position: relative;
+        }
+        /* Apply no-sort to group headers */
+        th[colspan] {
+            cursor: default !important;
+            pointer-events: none;
+        }
+        th[colspan]:after {
+            display: none !important;
+        }
+        .publication-subtitle {
+            font-size: 1.5rem !important;
+        }
+        .stat-container {
+            margin-bottom: 5px;
+        }
+        .stat-container + p {
+            margin-top: 5px;
+        }
+        .motivation-img-container {
+            text-align: center;
+            width: 100%;
+        }
+        .carousel {
+            overflow: hidden;
+            position: relative;
+        }
+        .carousel-item {
+            display: none;
+        }
+        .carousel-item.is-active {
+            display: block;
+        }
+        .statistics-container {
+            margin-bottom: 40px;
+        }
+        /* Add HuggingFace icon */
+        .icon-huggingface {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23ffffff' d='M38.08 21.51a4.4 4.4 0 0 1-4.01 4.35 2.67 2.67 0 0 1-2.15-.95 2.67 2.67 0 0 1-2.15.95 4.41 4.41 0 0 1-4.01-4.35c0-2.92 2.78-5.41 5.69-8.25.48-.47 1.27-.47 1.75 0 2.91 2.84 5.69 5.33 5.69 8.25zm-21.57 0c0 2.37-1.79 4.35-4.02 4.35-.8 0-1.56-.34-2.15-.95-.59.61-1.35.95-2.15.95-2.22 0-4.01-1.98-4.01-4.35 0-2.92 2.78-5.41 5.68-8.25a1.25 1.25 0 0 1 1.75 0c2.91 2.84 5.69 5.33 5.69 8.25zm-4.02 15.6a2.99 2.99 0 1 1 0-5.96 2.99 2.99 0 0 1 0 5.96zm9 0a2.99 2.99 0 1 1 0-5.96 2.99 2.99 0 0 1 0 5.96zm9 0a2.99 2.99 0 1 1 0-5.96 2.99 2.99 0 0 1 0 5.96zm9 0a2.99 2.99 0 1 1 0-5.96 2.99 2.99 0 0 1 0 5.96zM24.5 24a4.41 4.41 0 0 0-4.01-4.35 2.67 2.67 0 0 0-2.15.95 2.67 2.67 0 0 0-2.15-.95 4.41 4.41 0 0 0-4.01 4.35c0 2.92 2.78 5.41 5.69 8.25.48.47 1.26.47 1.75 0 2.91-2.84 5.69-5.33 5.69-8.25zm14.36 0c0 2.37-1.8 4.35-4.02 4.35-.8 0-1.56-.34-2.15-.95-.59.61-1.35.95-2.15.95-2.22 0-4.01-1.98-4.01-4.35 0-2.92 2.77-5.41 5.68-8.25a1.26 1.26 0 0 1 1.76 0c2.9 2.84 5.68 5.33 5.68 8.25z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            vertical-align: middle;
+        }
+        
+        /* Particle animation canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* LOGO */
+        .hero-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 28px 48px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(53, 94, 252, 0.15);
+            box-shadow: 0 35px 80px rgba(53, 94, 252, 0.15);
+            width: 100%;
+            max-width: 860px;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(5px);
+        }
+        .logo-figure {
+            width: 140px;
+            height: 140px;
+            border-radius: 20px;
+            background: #f6f8ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 0 1px rgba(53, 94, 252, 0.08);
+        }
+        .logo-figure img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 20px;
+        }
+        .logo-text h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1b2445;
+            letter-spacing: 0.05em;
+        }
+        .logo-text p {
+            margin: 0.25rem 0 0;
+            font-size: 1.2rem;
+            color: #4a5876;
+        }
+
+        .carousel-item-content {
+            padding: 1rem;
+            width: 100%; 
+        }
+
+        .video-wrapper {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: transparent;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            
+            padding-top: 0 !important; 
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .annotation-box {
+            background-color: #f5f5f5;
+            border-left: 4px solid #3273dc;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #4a4a4a;
+            line-height: 1.5;
+        }
+        .annotation-label {
+            font-weight: 700;
+            color: #363636;
+            margin-right: 0.5rem;
+        }
+
+        .qa-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: 100%;
+            justify-content: flex-start;
+        }
+
+        .qa-box {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-left-width: 5px;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .qa-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .qa-box.type-open_ended, .qa-box.type-FAU, .qa-box.type-TR, .qa-box.type-CR { border-left-color: #48c774; } /* Green */
+        .qa-box.type-close_ended, .qa-box.type-CIA, .qa-box.type-CRS, .qa-box.type-CIT, .qa-box.type-CEU, .qa-box.type-FI, .qa-box.type-GI, .qa-box.type-PM, .qa-box.type-SE { border-left-color: #ffdd57; } /* Yellow */
+        .qa-box.type-intentional { border-left-color: #f14668; } /* Red */
+        .qa-box.type-annotation { border-left-color: #3273dc; } /* Blue */
+
+        .question-text {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        .question-icon {
+            margin-right: 8px;
+            margin-top: 3px;
+            opacity: 0.7;
+        }
+
+        .answer-text {
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        .correct-tag {
+            background-color: #effaf3;
+            color: #257942;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        .model-pred-tag {
+            background-color: #fffdf5;
+            color: #947600;
+            border: 1px solid #ffe08a;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* 任务标签样式 */
+        .task-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .tier-1-tag { background-color: #ffe08a; color: rgba(0,0,0,0.7); }
+        .tier-2-tag { background-color: #b5e3ff; color: rgba(0,0,0,0.7); }
+        .tier-3-tag { background-color: #ffcfa0; color: rgba(0,0,0,0.7); }
+        .tier-4-tag { background-color: #c4c4c4; color: rgba(0,0,0,0.7); }
+
+        .qa-category-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .label-gt {
+            color: #257942; /* Green */
+        }
+        .label-model {
+            color: #e67e22; /* Orange */
+        }
+
+        #question-carousel .carousel-item {
+            width: 100% !important;
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+<!-- Canvas for particle animation -->
+<canvas id="particle-canvas"></canvas>
+
+<section class="hero">
+    <div class="hero-body">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column">
+                    <div class="hero-header">
+                        <div class="logo-card" style="justify-content: center; text-align: center;">
+                            <div class="logo-text">
+                                <h1 class="publication-title">CFG-Bench</h1>
+                                <p style="font-size: 1.6rem; line-height: 1.2;">Beyond Description: Cognitively Benchmarking Fine-Grained Action for Embodied Agents</p>
+                            </div>
+                        </div>
+                        <!-- <h2 class="subtitle is-3 publication-subtitle" style="font-size: 1.5rem; margin-bottom: 20px;">
+                            
+                        </h2> -->
+                    </div>
+
+                    <div class="is-size-5 publication-authors" style="width: 90%; margin: 20px auto; font-size: 1.25rem;">
+                    </div>
+
+                    <div class="is-size-5 publication-authors" style="font-size: 1.25rem;">
+
+                    </div>
+
+                    <div class="column has-text-centered">
+                        <div class="publication-links">
+                            <!-- PDF / 代码 / 数据集链接占位，后续请替换为你自己的地址 -->
+                            <span class="link-block">
+                                <a href="https://www.arxiv.org/abs/2511.18685" class="external-link button is-normal is-rounded is-dark">
+                                    <span class="icon">
+                                        <i class="ai ai-arxiv"></i>
+                                    </span>
+                                    <span style="font-size: 1.1rem;">Paper</span>
+                                </a>
+                            </span>
+                            <span class="link-block">
+                                <a href="https://github.com/CFG-Bench/CFG-Bench" class="external-link button is-normal is-rounded is-dark">
+                                    <span class="icon">
+                                        <i class="fab fa-github"></i>
+                                    </span>
+                                    <span style="font-size: 1.1rem;">Code</span>
+                                </a>
+                            </span>
+                            <!-- <span class="link-block">
+                                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                                    <span class="icon">
+                                        <p style="font-size:18px">📊</p>
+                                    </span>
+                                    <span style="font-size: 1.1rem;">Dataset</span>
+                                </a>
+                            </span>
+                            
+                            <span class="link-block">
+                <a href="#leaderboard"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <p style="font-size:18px">🏆</p>
+                  </span>
+                  <span style="font-size: 1.1rem;">Leaderboard</span>
+                </a> -->
+                                
+              </span>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container" style="margin-bottom: 2vh;">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+                <h2 class="title is-3" style="font-size: 2rem;">Introduction</h2>
+                <div class="content has-text-justified" style="font-size: 1.1rem;">
+                    Multimodal Large Language Models (MLLMs) show promising results as decision-making engines for embodied agents operating in complex, physical environments. However, existing benchmarks often prioritize high-level planning or spatial reasoning, leaving the fine-grained action intelligence required for embodied physical interaction underexplored. To address this gap, we introduce CFG-Bench, a new benchmark designed to systematically evaluate this crucial capability. CFG-Bench consists of 1,368 curated videos paired with 19,562 three-modalities question-answer pairs targeting four cognitive abilities: 1) Physical Interaction, 2) Temporal-Causal Relation, 3) Intentional Understanding, and 4) Evaluative Judgment. Together, these dimensions provide a systematic framework for assessing a model's ability to translate visual observations into actionable knowledge, moving beyond mere surface-level recognition. Our comprehensive evaluation on CFG-Bench reveals that leading MLLMs struggle to produce detailed instructions for physical interactions and exhibit profound limitations in the higher-order reasoning of intention and evaluation. Moreover, supervised fine-tuning (SFT) on our data demonstrates that teaching an MLLMs to articulate fine-grained actions directly translates to significant performance gains on established embodied benchmarks. Our analysis highlights these limitations and offers insights for developing more capable and grounded embodied agents.
+                </div>
+            </div>
+        </div>
+        <!--/ Introduction. -->
+    </div>
+</section>
+
+<!--leader board-->
+<!-- <section class="section">
+    <div class="container">
+
+        <div class="columns is-centered">Placeholder note beneath leaderboard.</div>
+
+
+            <div class="column is-full has-text-centered content">
+
+                <h2 class="title is-3" id="leaderboard" style="font-size: 2rem;">Leaderboard</h2>
+                <div class="content">
+                    <p class="mt-3" style="font-size: 1.1rem;">Evaluation results on CFG-Bench. Click on a specific indicator (such as ALL) to view the corresponding ranking list.
+
+</p>
+
+                    <table class="js-sort-table" id="results">
+                        <thead>
+                        <tr>
+                            <th rowspan="2" class="no-sort" style="vertical-align: middle; font-size: 1.1rem;"><strong>Methods</strong></th>
+                            <th rowspan="2" class="no-sort" style="vertical-align: middle; font-size: 1.1rem;"><strong>Input</strong></th>
+                            <th rowspan="2" class="no-sort" style="vertical-align: middle; font-size: 1.1rem;"><strong>Avg.</strong></th>
+                            <th rowspan="2" class="no-sort" style="vertical-align: middle; font-size: 1.1rem;"><strong>Avg<sub>o</sub></strong></th>
+                            <th colspan="2" class="no-sort" style="text-align: center; font-size: 1.1rem;"><strong>Interaction</strong></th>
+                            <th colspan="3" class="no-sort" style="text-align: center; font-size: 1.1rem;"><strong>Causal-Temporal</strong></th>
+                            <th colspan="3" class="no-sort" style="text-align: center; font-size: 1.1rem;"><strong>Intention</strong></th>
+                            <th colspan="3" class="no-sort" style="text-align: center; font-size: 1.1rem;"><strong>Evaluation</strong></th>
+                        </tr>
+                        <tr>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>FAU</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>CIA</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>TR</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>CR</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>CRS</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>FI</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>GI</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>CIT</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>PM</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>SE</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>CEU</strong></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.95rem;"><strong>Human</strong></td>
+                            <td>&mdash;</td>
+                            <td>95.85</td>
+                            <td>9.05</td>
+                            <td>93.48</td>
+                            <td>8.76</td>
+                            <td>95.97</td>
+                            <td>98.10</td>
+                            <td>9.02</td>
+                            <td>8.83</td>
+                            <td>9.51</td>
+                            <td>9.11</td>
+                            <td>8.92</td>
+                            <td>8.63</td>
+                            <td>9.62</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.95rem;"><strong>Random</strong></td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                            <td>20</td>
+                            <td>&mdash;</td>
+                            <td>20</td>
+                            <td>20</td>
+                            <td>20</td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                            <td>&mdash;</td>
+                        </tr>
+                        <tr class="group-row group-proprietary">
+                            <td colspan="15"><span class="group-label">Proprietary MLLMs</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gemini-2.5-Pro [7]</strong></td>
+                            <td>4 fps</td>
+                            <td><strong>59.52</strong></td>
+                            <td><strong>5.40</strong></td>
+                            <td>58.81</td>
+                            <td>4.58</td>
+                            <td>54.81</td>
+                            <td>64.95</td>
+                            <td>4.55</td>
+                            <td>5.18</td>
+                            <td>6.15</td>
+                            <td>5.31</td>
+                            <td>5.72</td>
+                            <td>5.19</td>
+                            <td>6.49</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPT-5 [27]</strong></td>
+                            <td>1 fps</td>
+                            <td><u>55.44</u></td>
+                            <td><u>4.13</u></td>
+                            <td>54.71</td>
+                            <td>2.61</td>
+                            <td>46.53</td>
+                            <td>65.09</td>
+                            <td>3.22</td>
+                            <td>4.98</td>
+                            <td>4.64</td>
+                            <td>3.16</td>
+                            <td>4.55</td>
+                            <td>4.82</td>
+                            <td>5.05</td>
+                        </tr>
+                        <tr class="group-row group-open">
+                            <td colspan="15"><span class="group-label">Open-source MLLMs</span></td>
+                        </tr>
+                        <tr>
+                            <td>Video-LLaMA3-2B [43]</td>
+                            <td>4 fps</td>
+                            <td>43.23</td>
+                            <td>3.78</td>
+                            <td>51.21</td>
+                            <td>2.14</td>
+                            <td>34.64</td>
+                            <td>43.83</td>
+                            <td>2.80</td>
+                            <td>4.77</td>
+                            <td>4.82</td>
+                            <td>3.24</td>
+                            <td>4.19</td>
+                            <td>4.07</td>
+                            <td>4.21</td>
+                        </tr>
+                        <tr>
+                            <td>Video-LLaMA3-7B [43]</td>
+                            <td>4 fps</td>
+                            <td>51.27</td>
+                            <td>4.13</td>
+                            <td>51.33</td>
+                            <td>2.39</td>
+                            <td>50.17</td>
+                            <td>52.31</td>
+                            <td>3.29</td>
+                            <td>5.03</td>
+                            <td>4.96</td>
+                            <td>3.44</td>
+                            <td>4.68</td>
+                            <td>4.21</td>
+                            <td>5.05</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <p style="text-align: left; font-size: 1rem;">Placeholder note beneath leaderboard.</p>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section> -->
+
+<!-- <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+        <h1 class="title is-1 mathvista_other" style="font-size: 2.5rem;">
+            <span class="mathvista_other" style="vertical-align: middle">CFG-Bench</span>
+        </h1>
+    </div>
+</section> -->
+
+<!--Motivation-->
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths" style="width: 100%;">
+
+                <h2 class="title is-3" style="font-size: 2rem;">Motivation</h2>
+                <div class="content has-text-justified" style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="motivation-img-container">
+                        <img src="static/images/motivation.png" style="max-width: 40%;"/>
+                    </div>
+                    <div style="text-align: justify; margin-bottom: 20px; width: 80%;"></div>
+                        <p style="font-size: 1.1rem; width: 80%;">Illustration of CFG-Bench's focus on embodied intelligence over descriptive accuracy. The top part shows how FAVOR-Bench annotates and questions from a third-person perspective, a task which current MLLMs can often solve. In contrast, the bottom part demonstrates CFG-Bench's fine-grained annotation and first-person scenario questions, which probes for the actionable physical and intentional details necessary for embodied agents. Current MLLMs struggle to master the crucial fine-grained details required for physical interaction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!--Task Demonstration-->
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths" style="width: 100%;">
+
+                <h2 class="title is-3" style="font-size: 2rem;">Task Demonstration</h2>
+                <div class="content has-text-justified">
+
+                    <div>
+                        <div class="content has-text-centered">
+                            <img src="static/images/demonstration.png" style="width: 90%;"/>
+                            <p style="text-align: justify; width: 80%; margin-left: auto; margin-right: auto; font-size: 1.1rem;">
+                            Task demonstration of CFG-Bench. Note: 
+                            <em>all QA pairs, including those above, are slightly simplified for clarity and brevity.</em>
+                            </p>
+                            
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+
+    </div>
+</section>
+
+
+
+
+
+
+
+<!--Statistics-->
+<section>
+    <div class="columns is-centered">
+        <div class="column">
+            <div class="content has-text-centered">
+                <h2 class="title is-3" style="margin-top: 30px; font-size: 2rem;">Statistics</h2>
+
+
+                <div class="content has-text-centered statistics-container">
+                    <img src="static/images/data_statistic_1.png" style="width: 100%; max-width: 1000px; height: auto;"/>
+                    <p style="text-align: justify; margin-bottom: 10px; margin-left: auto; margin-right: auto; width: 60%; font-size: 1.1rem;">Data statistics of CFG-Bench. (a) Distribution and video length statistics of the five datasets. (b) The distribution of tasks across four tiers. AW means average words of questions.</p>
+                </div>
+                
+
+
+                <!-- <div class="content has-text-centered" style="margin-top: 40px;">
+                    <img src="static/images/placeholder.svg" style="width: 50%;"/>
+                    <p style="text-align: justify; margin-bottom: 40px; margin-left: auto; margin-right: auto; width: 55%; font-size: 1.1rem;">Additional statistics placeholder text.</p>
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<!--Compare-->
+<section>
+    <div class="columns is-centered">
+        <div class="column">
+            <div class="content has-text-centered">
+                <h2 class="title is-3" style="font-size: 2rem;">Benchmark Comparison</h2>
+                <img src="static/images/benchmark_comparison.png" alt="data-composition" style="max-width: 60%;"/>
+                <p style="text-align: justify; margin-bottom: 40px; margin-left: auto; margin-right: auto; width: 60%; font-size: 1.1rem;">Comparison with other benchmarks. CFG-Bench introduces a four-tiered cognitive framework for embodied fine-grained intelligence, distinguishing it from existing action benchmarks focused on third-person coarse description and other embodied benchmarks that prioritize spatial reasoning and high-level planning over the fine-grained physical action. It also provides a more comprehensive evaluation protocol by uniquely integrating three-modalities QAs. ✓ indicates partial coverage.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!--Experiments-->
+<section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+        <h1 class="title is-1 mathvista_other" style="font-size: 2.5rem;">Experimental Results</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+
+        <div class="columns is-centered m-6">
+            <div class="column is-full has-text-centered content">
+                <h2 class="title is-3" style="font-size: 2rem;">Results on CFG-Bench</h2>
+                <div class="box m-5">
+                    <div class="content has-text-centered">
+                        <img src="static/images/model_comparision.png" alt="grade-lv" width="90%"/>
+                        <p style="text-align: justify; margin-top: 0px; font-size: 1.1rem;">Comprehensive results of leading MLLMs on CFG-Bench. It presents the performance of each task within every cognitive tier, along with the average score for open-ended questions <strong>Avg<sub>o</sub></strong> and the average accuracy for close-ended questions <strong>Avg<sub>c</sub></strong>. Random selection and human performance are also included for comparison. The highest and suboptimal results are <strong>bolded</strong> and <span style="text-decoration: underline;">underlined</span>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="columns is-centered m-6">
+            <div class="column is-full has-text-centered content">
+                <h2 class="title is-3" style="font-size: 2rem;">Fine-tuning with CFG Captions</h2>
+
+                <div class="box m-5">
+                    <div class="columns is-centered is-variable is-4">
+                        <!-- Left Column -->
+                        <div class="column is-half">
+                            <div class="video-wrapper">
+                                <video controls muted loop playsinline width="100%">
+                                    <source src="static/videos/sft_em.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <div class="content has-text-left mt-4">
+                                <h4 class="title is-5 mb-2">Base Model (Qwen2.5-VL-7B)</h4>
+                                <div class="notification is-success is-light p-3" style="font-size: 0.95rem;">
+                                    <p class="mb-0">The robotic arm approaches the glass and the bottle.<br>
+                                    The robotic arm picks up the bottle.<br>
+                                    The robotic arm tilts the bottle and pours the liquid into the glass.</p>
+                                </div>
+                                
+                                <h4 class="title is-5 mb-2 mt-4">SFT Model</h4>
+                                <div class="notification is-info is-light p-3" style="font-size: 0.95rem;">
+                                    <p class="mb-0">The robotic hand is positioned on the left side of the frame. It slowly moves toward the glass bottle on the table. The robotic hand then grips the bottle's handle with its fingers, lifting it slightly off the table. As the bottle is lifted, the robotic hand rotates it counterclockwise to align the spout with the glass below. The hand then tilts the bottle and pours the liquid into the glass.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="column is-half">
+                            <div class="video-wrapper">
+                                <video controls muted loop playsinline width="100%">
+                                    <source src="static/videos/sft_human.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <div class="content has-text-left mt-4">
+                                <h4 class="title is-5 mb-2">Base Model (Qwen2.5-VL-7B)</h4>
+                                <div class="notification is-success is-light p-3" style="font-size: 0.95rem;">
+                                    <p class="mb-0">Person opens a bottle of vanilla extract with their right hand.<br>
+                                    Person scoops vanilla extract with a spoon using their right hand.<br>
+                                    Person pours the vanilla extract into a cup using their right hand.</p>
+                                </div>
+                                
+                                <h4 class="title is-5 mb-2 mt-4">SFT Model</h4>
+                                <div class="notification is-info is-light p-3" style="font-size: 0.95rem;">
+                                    <p class="mb-0">The fingers of both hands are opening a bag placed on the table. During the process, they slowly lift and rotate the bag once. Then, the left hand holds the bag while the right hand uses the fingers to open its mouth. The right hand takes a spoon from the cup on the table, lifts it up, then inserts it into the bag, slowly scoops out some black powder, pours the powder into the cup.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!--Visualization-->
+<section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+        <h1 class="title is-1 mathvista_other" style="font-size: 2.5rem;">Question-Answer Examples</h1>
+    </div>
+</section>
+
+<section class="section">
+        <div class="columns is-centered m-6">
+            <div class="column is-full has-text-centered content">
+                <!-- <h2 class="title is-3" style="font-size: 2rem;">Question-Answer Pair Examples</h2> -->
+                <div class="box m-5">
+                    <div id="question-carousel" class="carousel">
+                        
+                        <!-- Item 1: Physical Interaction -->
+                        <div class="item-1">
+                            <div class="carousel-item-content">
+                                <div class="has-text-centered mb-4">
+                                    <span class="task-tag tier-1-tag">Tier 1: Physical Interaction</span>
+                                </div>
+    
+                                <div class="columns is-variable is-5">
+                                    <div class="column is-5">
+                                        <div class="video-wrapper">
+                                            <video poster="" id="video1" controls muted loop playsinline width="50%">
+                                                <source src="static/videos/26k-11-1-3-P1-1527-2037.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
+                                        <div class="annotation-box">
+                                            <span class="annotation-label"><i class="fas fa-align-left"></i> Annotation:</span>
+                                            I stand in the kitchen, holding a white cup by its handle with my right hand. I close the black microwave oven door by gripping the door handle with my left hand. Then I walk right and stand in front of the sink, taking two sips of water. I lower my head, turn on the faucet with my left hand, and place the cup under the running water to fill it. I wipe the inner wall of the cup with my left thumb. I pour the water out with my right hand, shake the cup twice to dry it, and turn off the faucet with my left hand. I then walk right to a white cabinet above the countertop. I open the left cabinet door by gripping its handle with my left hand, then open the right cabinet door by gripping its handle with my left hand while blocking the left cabinet door with my left arm to prevent it from closing. The cabinet has three shelves filled with various glassware and cups. I place the cup on the bottom flat surface inside the right cabinet, close the left cabinet door by gripping its handle with my left hand, and close the right cabinet door by gripping its handle with my right hand. Finally, I turn toward the living room, where several people gather—some sitting and some standing.
+                                        </div>
+                                    </div>
+    
+                                    <div class="column is-7">
+                                        <div class="qa-container">
+                                            <!-- Factual Action Understanding (FAU) -->
+                                            <div class="qa-box type-FAU">
+                                                <span class="qa-FAU-label">Factual Action Understanding (FAU)</span>
+                                                <div class="question-text"><i class="fas fa-list-ol question-icon"></i> How do you clean the white cup after you drink from it?</div>
+                                                <div class="answer-text">
+                                                    <div class="correct-tag">(1) I fill it with water from the faucet, wipe the inside with my left thumb, pour the water out with my right hand, and shake the cup twice.</div>
+                                                    <div>(2) I fill it with water from the faucet, wipe the inside with my right thumb, pour the water out with my right hand, and shake the cup once.</div>
+                                                    <div>(3) I fill it with water from the faucet, wipe the inside with my left thumb, pour the water out with my right hand, and shake the cup once.</div>
+                                                    <div>(4) I use a sponge to scrub the inside of the cup, rinse it under the faucet, and shake it twice to dry.</div>
+                                                    <div>(5) I fill the cup with water, wipe the outer wall with my left thumb, and shake it a few times to dry.</div>
+                                                </div>
+
+                                                <div class="question-text"><i class="fas fa-list-ol question-icon"></i> How do you place the white cup into the cabinet?</div>
+                                                <div class="answer-text">
+                                                    <div class="correct-tag">(1) I place the cup on the bottom flat surface inside the right side of the cabinet.</div>
+                                                    <div>(2) I place the cup on the bottom flat surface inside the left side of the cabinet.</div>
+                                                    <div>(3) I hang the cup by its handle from a hook on the bottom of the top shelf.</div>
+                                                    <div>(4) I place the cup on the middle shelf inside the right side of the cabinet.</div>
+                                                    <div>(5) I place the cup on the top shelf inside the left side of the cabinet.</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Counterfactual Interaction (CIA) -->
+                                            <div class="qa-box type-CIA">
+                                                <span class="qa-CIA-label">Counterfactual Interaction (CIA)</span>
+                                                <div class="question-text"><i class="fas fa-question-circle question-icon"></i> How do you open the black microwave door using the door handle?</div>
+                                                <div class="answer-text">
+                                                    <div class="label-gt"><strong class="label-gt">GT:</strong> I do not open the microwave door; I close it by gripping the handle with my left hand.</div>
+                                                    <div class="label-model"><strong class="label-model">Gemini-2.5-Pro:</strong> Pull the vertical handle located on the right side of the microwave door.</div>
+                                                    <div class="model-pred-tag">correctness: 0 detailedness: 0</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Item 2: Temporal-Causal Relation -->
+                        <div class="item-2">
+                            <div class="carousel-item-content">
+                                <div class="has-text-centered mb-4">
+                                    <span class="task-tag tier-2-tag">Tier 2: Temporal-Causal Relation</span>
+                                </div>
+                                <div class="columns is-variable is-5">
+                                    <div class="column is-5">
+                                        <div class="video-wrapper">
+                                            <video poster="" id="video2" controls muted loop playsinline width="100%">
+                                                <source src="static/videos/fair_bike_06_18_21_42.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
+                                        <div class="annotation-box">
+                                            <span class="annotation-label"><i class="fas fa-align-left"></i> Annotation:</span>
+                                            I lift the bicycle basket slightly with both hands, then lower them. My right hand takes a tool from a clothing pocket. My left hand rotates an attachment on the tool, then holds the tire steady. My right hand fits the tool onto the screw on the right side of the bicycle and turns the screw back and forth half a turn. Then, my left hand takes the tool, and my right hand steadies the tire. My left hand fits the tool onto the screw on the left side of the bicycle and turns the screw. Afterward, my left hand removes the tool and gently supports the wheel while my right hand unscrews the right-side screw and places it in my left hand. Both of my hands then work together to turn the axle components on both sides and jointly remove the tire. I then bend down.
+                                        </div>
+                                    </div>
+                                    <div class="column is-7">
+                                        <div class="qa-container">
+                                            <div class="qa-box type-TR">
+                                                <span class="qa-TR-label">Temporal Relation (TR)</span>
+                                                <div class="question-text"><i class="fas fa-list-ol question-icon"></i> What is the correct order of your main actions to loosen and remove the fasteners from both sides of the wheel in the video?</div>
+                                                <div class="answer-text">
+                                                    <div>(1) I use the tool on the right screw with my right hand, and then immediately unscrew the same screw completely by hand.</div>
+                                                    <div class="correct-tag">(2) I use the tool on the right screw with my right hand, use the tool on the left screw with my left hand, and then unscrew the right screw completely with my right hand.</div>
+                                                    <div>(3) I use the tool on the right screw with my right hand, remove the tire with both hands, and then use the tool on the left screw with my left hand.</div>
+                                                    <div>(4) I use the tool on the left screw with my left hand, use the tool on the right screw with my right hand, and then unscrew the right screw with my right hand.</div>
+                                                    <div>(5) I use the tool on both screws simultaneously with both hands, and then unscrew them completely with both hands.</div>
+                                                </div>
+                                            </div>
+                                            <div class="qa-box type-CR">
+                                                <span class="qa-CR-label">Causal Relation (CR)</span>
+                                                <div class="question-text"><i class="fas fa-list-ol question-icon"></i> What set of actions in the video directly enables you to finally remove the tire using both of your hands?</div>
+                                                <div class="answer-text">
+                                                    <div>(1) I lift up the bicycle basket to create more space for the tire to come out.</div>
+                                                    <div>(2) I only partially loosen the screws on both sides before pulling the tire out with force.</div>
+                                                    <div>(3) I use the tool as a lever to pry the wheel off the axle.</div>
+                                                    <div class="correct-tag">(4) I unscrew the right-side screw by hand and turn the axle components on both sides.</div>
+                                                    <div>(5) I deflate the tire and then pull it out from the frame.</div>
+                                                </div>
+                                            </div>
+                                            <div class="qa-box type-CRS">
+                                                <span class="qa-CRS-label">Counterfactual Relationship (CRS)</span>
+                                                <div class="question-text"><i class="fas fa-question-circle question-icon"></i> In the video, you use the tool to completely remove the screw on the right side of the bicycle before swapping the tool to your left hand to work on the left-side screw. What happens as a result of this sequence?</div>
+                                                <div class="answer-text">
+                                                    <div class="label-gt"><strong class="label-gt">GT:</strong> This sequence is incorrect. I first use the tool to turn the right-side screw, then use it on the left-side screw. The right-side screw is only fully unscrewed by hand later, which allows both my hands to then remove the tire.</div>
+                                                    <div class="label-model"><strong class="label-model">Gemini-2.5-Pro:</strong> The question’s description is incorrect. In the video, I only loosen the right-side screw slightly with the tool, then switch the tool to my left hand to work on the left-side screw, and only later fully unscrew the right-side screw by hand before using both hands to remove the tire.</div>
+                                                    <div class="model-pred-tag">correctness: 9 detailedness: 8</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Item 3: Intentional Understanding -->
+                        <div class="item-3">
+                            <div class="carousel-item-content">
+                                <div class="has-text-centered mb-4">
+                                    <span class="task-tag tier-3-tag">Tier 3: Intentional Understanding</span>
+                                </div>
+                                <div class="columns is-variable is-5">
+                                    <div class="column is-5">
+                                        <div class="video-wrapper">
+                                            <video poster="" id="video3" controls muted loop playsinline width="100%">
+                                                <source src="static/videos/indiana_cooking_22_2_358_375.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
+                                        <div class="annotation-box">
+                                            <span class="annotation-label"><i class="fas fa-align-left"></i> Annotation:</span>
+                                            I bend down, grasp the faucet handle with my right hand, and gently turn it in the opposite direction of my body. My left hand holds a spoon under the faucet, and both of my hands wash the black spoon together. Then, I turn off the faucet with my right hand, walk left, and place the black spoon on a sheet of paper on the table with my left hand. Next, my right hand picks up another stainless steel spoon and stirs the tea in the pot while my left hand rests on the table to the left of the induction cooktop. Then, my left hand presses a button on the induction cooktop, my right hand stops stirring and lifts the spoon, and my left hand reaches toward the black spoon.
+                                        </div>
+                                    </div>
+                                    <div class="column is-7">
+                                        <div class="qa-container">
+                                            <div class="qa-box type-FI">
+                                                <span class="qa-FI-label">Functional Intention (FI)</span>
+                                                <div class="question-text"><i class="fas fa-question-circle question-icon"></i> Why do you use your right hand to pick up the stainless steel spoon and stir?</div>
+                                                <div class="answer-text">
+                                                    <div class="label-gt"><strong class="label-gt">GT:</strong> Because my right hand controls more stably, while my left hand rests on the table and assists in adjusting the temperature.</div>
+                                                    <div class="label-model"><strong class="label-model">Gemini-2.5-Pro:</strong> Because my right hand can control the spoon more steadily over the pot, while my left hand rests on the table and is used to operate the induction cooktop when I need to adjust the heating.</div>
+                                                    <div class="model-pred-tag">correctness: 10 detailedness: 10</div>
+                                                </div>
+                                            </div>
+                                            <div class="qa-box type-GI">
+                                                <span class="qa-GI-label">Global Intention (GI)</span>
+                                                <div class="question-text"><i class="fas fa-question-circle question-icon"></i> What is the most likely overall purpose of your actions in the video?</div>
+                                                <div class="answer-text">
+                                                    <div class="label-gt"><strong class="label-gt">GT:</strong> I am preparing a pot of tea using an induction cooktop.</div>
+                                                    <div class="label-model"><strong class="label-model">Gemini-2.5-Pro:</strong> I'm heating some water to wash the dishes.</div>
+                                                    <div class="model-pred-tag">correctness: 1 detailedness: 2</div>
+                                                </div>
+                                            </div>
+                                            <div class="qa-box type-CIT">
+                                                <span class="qa-CIT-label">Counterfactual Intention (CIT)</span>
+                                                <div class="question-text"><i class="fas fa-question-circle question-icon"></i> To cool your tea in the pot more quickly, instead of just mixing it, how should your action of stirring with the stainless steel spoon change?</div>
+                                                <div class="answer-text">
+                                                    <div class="label-gt"><strong class="label-gt">GT:</strong> I should turn off the fire and repeatedly take the spoon filled with tea out of the teapot and pour it back.</div>
+                                                    <div class="label-model"><strong class="label-model">Gemini-2.5-Pro:</strong> I should stop stirring and press the button to stop heating.</div>
+                                                    <div class="model-pred-tag">correctness: 4 detailedness: 4</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Item 4: Evaluative Judgment -->
+                        <div class="item-4">
+                            <div class="carousel-item-content">
+                                <div class="has-text-centered mb-4">
+                                    <span class="task-tag tier-4-tag">Tier 4: Evaluative Judgment</span>
+                                </div>
+                                <div class="columns is-variable is-5">
+                                    <div class="column is-5">
+                                        <div class="video-wrapper">
+                                            <video poster="" id="video4" controls muted loop playsinline width="100%">
+                                                <source src="static/videos/sfu_covid_009_2_130_146.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
+                                        <div class="annotation-box">
+                                            <span class="annotation-label"><i class="fas fa-align-left"></i> Annotation:</span>
+                                            I hold a nasal swab between the fingers of my right hand and gently rotate it inside a test tube held by my left hand. Then, I withdraw the swab with my right hand and place it flat on a sheet of white paper using both hands. Next, I pick up the test tube cap with my right hand and secure it onto the test tube, while my left hand steadily supports the tube throughout. Only after completing these steps do I release the test tube with both hands, leaving it in a stable position.
+                                        </div>
+                                    </div>
+                                    <div class="column is-7">
+                                        <div class="qa-container">
+                                            <div class="qa-box type-PM">
+                                                <span class="qa-PM-label">Process Monitoring (PM)</span>
+                                                <div class="question-text"><i class="fas fa-question-circle question-icon"></i> After you place the swab on the paper, what is the status of your test tube preparation process?</div>
+                                                <div class="answer-text">
+                                                    <div class="label-gt"><strong class="label-gt">GT:</strong> The process is nearing completion, with my next critical step being to seal the test tube to secure the sample.</div>
+                                                    <div class="label-model"><strong class="label-model">Gemini-2.5-Pro:</strong> Most of the preparatory work has been completed.</div>
+                                                    <div class="model-pred-tag">correctness: 7 detailedness: 3</div>
+                                                </div>
+                                            </div>
+                                            <div class="qa-box type-SE">
+                                                <span class="qa-SE-label">Strategy Evaluation (SE)</span>
+                                                <div class="question-text"><i class="fas fa-question-circle question-icon"></i> Why is your decision to use both hands to place the used swab flat on the paper a well-coordinated maneuver?</div>
+                                                <div class="answer-text">
+                                                    <div class="label-gt"><strong class="label-gt">GT:</strong> It demonstrates high physical control, ensuring the potentially contaminated swab is placed precisely and gently without accidental contact or movement.</div>
+                                                    <div class="label-model"><strong class="label-model">Gemini-2.5-Pro:</strong> Using both hands enables me to guide the cotton swab more steadily, so that it can lie flat on the paper.</div>
+                                                    <div class="model-pred-tag">correctness: 9 detailedness: 7</div>
+                                                </div>
+                                            </div>
+                                            <div class="qa-box type-CEU">
+                                                <span class="qa-CEU-label">Counterfactual Evaluation (CEU)</span>
+                                                <div class="question-text"><i class="fas fa-question-circle question-icon"></i> You use your left hand to hold the test tube while your right hand caps it. What would be the most likely outcome if you attempted to hold the tube and secure the cap using only your right hand?</div>
+                                                <div class="answer-text">
+                                                    <div class="label-gt"><strong class="label-gt">GT:</strong> I would find the process significantly less stable and slower, increasing my risk of fumbling with the cap or knocking over the unsecured test tube.</div>
+                                                    <div class="label-model"><strong class="label-model">Gemini-2.5-Pro:</strong> It can be completed with just the right hand, which is more efficient.</div>
+                                                    <div class="model-pred-tag">correctness: 4 detailedness: 4</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+        <h1 class="title is-1 mathvista_other" id="citation" style="font-size: 2.5rem;">Citation</h1>
+    </div>
+</section>
+
+
+
+<section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+    <pre style="font-size: 0.9rem;">
+        <code>@article{liu2025beyond,
+                title={Beyond Description: Cognitively Benchmarking Fine-Grained Action for Embodied Agents},
+                author={Liu, Dayong and Xu, Chao and Chen, Weihong and Zhang, Suyu and Wang, Juncheng and Deng, Jiankang and Sun, Baigui and Liu, Yang},
+                journal={arXiv preprint arXiv:2511.18685},
+                year={2025}
+                }
+</code></pre>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div class="content has-text-centered">
+            <!-- License Attribution Section -->
+            <div class="license-text" style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">
+                <p>
+                    <i class="fab fa-creative-commons"></i> 
+                    <strong>Data Attribution:</strong> The videos shown in this benchmark are sampled from the 
+                    <a href="https://agibot-world.com/" target="_blank">AgiBot-World</a>,
+                    <a href="https://sites.google.com/view/egotaskqa" target="_blank">EgoTaskQA</a>
+                    and 
+                    <a href="https://ego-exo4d-data.org/" target="_blank">Ego-Exo4D</a>
+                    datasets.
+                </p>
+                <p>
+                    All visual content is used under the 
+                    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0 International License</a>. 
+                    Please refer to the original project pages for full terms of use and citation requirements.
+                </p>
+            </div>
+            <!-- End of License Section -->
+
+            <p style="font-size: 0.9rem;">
+                This website is adapted from <a href="https://favor-bench.github.io/">FAVOR-Bench</a>, licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Sort table function
+    function sortTable(table, col, reverse) {
+        var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+            tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
+            i;
+        reverse = (reverse) ? -1 : 1;
+        tr = tr.sort(function (a, b) {
+            // Sort based on cell content
+            let aVal = a.cells[col].textContent.trim();
+            let bVal = b.cells[col].textContent.trim();
+            
+            // Handle '--' as lowest value
+            if (aVal === '--') return 1 * reverse;
+            if (bVal === '--') return -1 * reverse;
+
+            // Parse as numbers if possible
+            let aNum = parseFloat(aVal);
+            let bNum = parseFloat(bVal);
+            
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return (aNum - bNum) * reverse;
+            }
+            
+            // Fall back to string comparison
+            return aVal.localeCompare(bVal) * reverse;
+        });
+        
+        // Append each row in order
+        for(i = 0; i < tr.length; i++) tb.appendChild(tr[i]);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all sortable tables
+        const tables = document.querySelectorAll('table.js-sort-table');
+        
+        tables.forEach(function(table) {
+            // Get all th elements in the table that are not marked no-sort
+            const headers = table.querySelectorAll('th:not(.no-sort)');
+            
+            headers.forEach(function(header) {
+                header.addEventListener('click', function() {
+                    // Find the column index for sorting
+                    let colIndex = 0;
+                    let headerRow = this.parentNode;
+                    
+                    // If this is in the second row of headers
+                    if (headerRow.rowIndex === 1) {
+                        // Get the column index within this row
+                        let colIndexInRow = Array.from(headerRow.cells).indexOf(this);
+                        
+                        // Calculate the actual column index for the table
+                        colIndex = colIndexInRow + 4; // 4 is the count of columns in the first row (rowspan=2)
+                    } else {
+                        // For headers in the first row with rowspan=2
+                        colIndex = Array.from(headerRow.cells).indexOf(this);
+                    }
+                    
+                    // Determine sort direction
+                    const isAscending = !this.classList.contains('js-sort-asc');
+                    
+                    // Remove sorting classes from all headers
+                    headers.forEach(h => {
+                        h.classList.remove('js-sort-asc', 'js-sort-desc');
+                    });
+                    
+                    // Add appropriate class to the clicked header
+                    this.classList.add(isAscending ? 'js-sort-asc' : 'js-sort-desc');
+                    
+                    // Sort the table
+                    sortTable(table, colIndex, isAscending);
+                    updateRowNumbers();
+                });
+            });
+        });
+
+        // Initialize carousels with smooth transitions
+        bulmaCarousel.attach('#question-carousel', {
+            slidesToScroll: 1,
+            slidesToShow: 1,
+            infinite: true,
+            autoplay: false,
+            pauseOnHover: true
+        });
+
+        // Initial row numbering
+        updateRowNumbers();
+        
+        // Initialize the particle animation
+        initParticles();
+    });
+
+    function updateRowNumbers() {
+        const rows = document.querySelectorAll("#results tbody tr");
+        let currentNumber = 1;
+        rows.forEach(row => {
+            const firstCell = row.querySelector("td");
+            if (!firstCell) return;
+            const isGroupRow = row.classList.contains("group-row");
+            const originalLabel = firstCell.getAttribute("data-label");
+
+            if (isGroupRow) {
+                if (!originalLabel) {
+                    firstCell.setAttribute("data-label", firstCell.innerText.trim());
+                } else {
+                    firstCell.innerText = originalLabel;
+                }
+                return;
+            }
+
+            if (originalLabel) {
+                firstCell.innerText = originalLabel;
+                return;
+            }
+
+            firstCell.setAttribute("data-label", firstCell.innerText.trim());
+            firstCell.innerText = firstCell.getAttribute("data-label");
+            currentNumber++;
+        });
+    }
+    
+    // Particle animation
+    function initParticles() {
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.color = `rgba(100, 150, 200, ${Math.random() * 0.15 + 0.05})`;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Create particles
+        const particles = [];
+        const particleCount = Math.min(100, Math.floor(window.innerWidth * window.innerHeight / 10000));
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        // Connect particles with lines
+        function connectParticles() {
+            const maxDistance = 150;
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < maxDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(100, 150, 200, ${0.1 * (1 - distance/maxDistance)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw particles
+            for (const particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+            
+            // Connect particles with lines
+            connectParticles();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    }
+</script>
+
+</body>
+</html>
